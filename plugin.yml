@@ -1,0 +1,16 @@
+name: FactionsPro
+author: [Tethered_ & NeuroBinds Project]
+description: A Plugin For Easily Managing Factions
+version: 0.1#Beta
+main: FactionsPro\FactionMain
+api:
+- 1.14.0
+- 2.0.0
+commands:
+  guilds:
+    description: use /guilds help for all parameters
+    permission: f.command
+permissions:
+  f.command:
+    default: true
+    description: "Allow use of all guilds commands"
