@@ -43,7 +43,7 @@ class FactionMain extends PluginBase implements Listener {
 
         $this->getServer()->getPluginManager()->registerEvents(new FactionListener($this), $this);
 
-        }
+        
 
         $this->fCommand = new FactionCommands($this);
 
