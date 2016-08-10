@@ -2,6 +2,7 @@
 
 namespace FactionsPro;
 
+use pocketmine\level\sound\EndermanTeleportSound;
 use pocketmine\plugin\PluginBase;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
@@ -99,30 +100,8 @@ class FactionListener implements Listener {
 			}
 		}
 	}
-	public function factionBlockBreakProtect(BlockBreakEvent $event) {
-		if($this->plugin->isInPlot($event->getPlayer())) {
-			if($this->plugin->inOwnPlot($event->getPlayer())) {
-				return true;
-			} else {
-				$event->setCancelled(true);
-				$event->getPlayer()->sendMessage($this->plugin->formatMessage("You cannot break blocks here. This is already a property of a faction. Type /f plotinfo for details."));
-				return true;
-			}
-		}
-	}
-	
-	public function factionBlockPlaceProtect(BlockPlaceEvent $event) {
-		if($this->plugin->isInPlot($event->getPlayer())) {
-			if($this->plugin->inOwnPlot($event->getPlayer())) {
-				return true;
-			} else {
-				$event->setCancelled(true);
-				$event->getPlayer()->sendMessage($this->plugin->formatMessage("You cannot place blocks here. This is already a property of a faction. Type /f plotinfo for details."));
-				return true;
-			}
-		}
-	}
 	public function onKill(PlayerDeathEvent $event){
+
         $ent = $event->getEntity();
         $cause = $event->getEntity()->getLastDamageCause();
         if($cause instanceof EntityDamageByEntityEvent){
@@ -132,6 +111,9 @@ class FactionListener implements Listener {
                 if($this->plugin->isInFaction($p)){
                     $f = $this->plugin->getPlayerFaction($p);
                     $e = $this->plugin->prefs->get("PowerGainedPerKillingAnEnemy");
+		$p->sendTip("§6+ ".$this->plugin->prefs->get("PowerGainedPerKillingAnEnemy"));
+					$p->getLevel()->addSound(new EndermanTeleportSound($player));
+//hehe lel
                     if($ent instanceof Player){
                         if($this->plugin->isInFaction($ent->getPlayer()->getName())){
                            $this->plugin->addFactionPower($f,$e);
@@ -157,6 +139,24 @@ class FactionListener implements Listener {
             }
         }
     }
+    public function onDeath(PlayerDeathEvent $event) {
+		$victim = $event->getPlayer();
+		$cause = $victim->getLastDamageCause();
+		if($cause instanceof EntityDamageByEntityEvent) {
+			$killer = $cause->getDamager();
+			if($victim instanceof Player) {
+				$q = strtoupper($victim->getPlayer()->getName());
+                if($this->plugin->isInFaction($q)){
+                    $a = $this->plugin->getPlayerFaction($q);
+                    $b = $this->plugin->prefs->get("PowerReducedPerDeathByAnEnemy");
+		$victim->sendTip("§6- ".$this->plugin->prefs->get("PowerReducedPerDeathByAnEnemy"));
+					$victim->getLevel()->addSound(new EndermanTeleportSound($player));
+                    $this->plugin->subtractFactionPower($a,$b);
+                }
+				
+			}
+		} 
+	}
     
 	public function onPlayerJoin(PlayerJoinEvent $event) {
 		$this->plugin->updateTag($event->getPlayer()->getName());
