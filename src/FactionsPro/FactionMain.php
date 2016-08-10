@@ -2,9 +2,7 @@
 
 namespace FactionsPro;
 
-/*
- */
-
+//Thanks To NeuroBinds Project Corporation To Help Us With This!
 use pocketmine\plugin\PluginBase;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
@@ -47,7 +45,7 @@ class FactionMain extends PluginBase implements Listener {
 
         $this->fCommand = new FactionCommands($this);
 
-        $this->prefs = new Config($this->getDataFolder() . "Prefs.yml", CONFIG::YAML, array(
+        $this->prefs = new Config($this->getDataFolder() . "FSettings.yml", CONFIG::YAML, array(
             "MaxFactionNameLength" => 15,
             "MaxPlayersPerFaction" => 30,
             "OnlyLeadersAndOfficersCanInvite" => true,
@@ -58,6 +56,7 @@ class FactionMain extends PluginBase implements Listener {
             "PowerNeededToSetOrUpdateAHome" => 250,
             "PowerGainedPerPlayerInFaction" => 50,
             "PowerGainedPerKillingAnEnemy" => 10,
+"PowerReducedPerDeathByAnEnemy" => 10,
             "PowerGainedPerAlly" => 100,
             "AllyLimitPerFaction" => 5,
             "TheDefaultPowerEveryFactionStartsWith" => 0,
