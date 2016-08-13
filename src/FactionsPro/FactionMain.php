@@ -59,7 +59,6 @@ class FactionMain extends PluginBase implements Listener {
             "TheDefaultPowerEveryFactionStartsWith" => 0,
 	    "CreateCost" => 3000,
 	    "AllyCost" => 5000,
-	    "AllyPrice" => 5000,
         ));
         $this->db = new \SQLite3($this->getDataFolder() . "FactionsPro.db");
         $this->db->exec("CREATE TABLE IF NOT EXISTS master (player TEXT PRIMARY KEY COLLATE NOCASE, faction TEXT, rank TEXT);");
