@@ -18,6 +18,7 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\math\Vector3;
 use pocketmine\level\level;
 use pocketmine\level\Position;
+use onebone\economyapi\EconomyAPI;
 
 class FactionCommands {
 
@@ -30,6 +31,8 @@ class FactionCommands {
     public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
         if ($sender instanceof Player) {
             $player = $sender->getPlayer()->getName();
+	$create = $this->plugin->prefs->get("CreateCost");
+	$allyr = $this->plugin->prefs->get("AllyCost");
             if (strtolower($command->getName('guilds'))) {
                 if (empty($args)) {
                     $sender->sendMessage($this->plugin->formatMessage("Please use /guilds help for a list of commands"));
@@ -145,7 +148,7 @@ class FactionCommands {
                         if ($this->plugin->isInFaction($sender->getName())) {
                             $sender->sendMessage($this->plugin->formatMessage("You must leave the guilds first"));
                             return true;
-                        } else {
+                        } elseif($r = EconomyAPI::getInstance()->reduceMoney($player, $create)) {
                             $factionName = $args[1];
                             $rank = "Leader";
                             $stmt = $this->plugin->db->prepare("INSERT OR REPLACE INTO master (player, faction, rank) VALUES (:player, :faction, :rank);");
@@ -158,7 +161,18 @@ class FactionCommands {
                             $this->plugin->updateTag($sender->getName());
                             $sender->sendMessage($this->plugin->formatMessage("Guilds created", true));
                             return true;
-                        }
+                        }else{switch($r){
+			case EconomyAPI::RET_INVALID:
+			$sender->sendMessage($this->plugin->formatMessage("§bYou do not have enough coins to create a Guilds! Need §6$$create."));
+			break;
+			case EconomyAPI::RET_CANCELLED:
+			$sender->sendMessage($this->plugin->formatMessage("ERROR!"));
+			break;
+			case EconomyAPI::RET_NO_ACCOUNT:
+			$sender->sendMessage($this->plugin->formatMessage("ERROR!"));
+			break;
+						}
+                    }
                     }
 
                     /////////////////////////////// INVITE ///////////////////////////////
@@ -427,23 +441,23 @@ class FactionCommands {
 /*Help Commands*/
                     if (strtolower($args[0]) == "help") {
                         if (!isset($args[1]) || $args[1] == 1) {
-                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b««\n§l§b»§r     §dGuilds Help Page §f[§c1ff§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds about §l§b»§r §aShows Any Information You Need To Know!\n§l§c»§r §e/guilds accept §l§b»§r §aAccept A Guilds Request!\n§l§c»§r §e/guilds create <name> §l§b»§r §aCreate Your Desire Guilds!\n§l§c»§r §e/guilds del §l§b»§r §aDelete Your Own Guilds!\n§l§c»§r §e/guilds demote <player> §l§b»§r §aDemote Your Any Assistance To Members!\n§l§c»§r §e/guilds deny §l§b»§r §aDeny A Guilds Request!");
+                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b««\n§l§b»§r     §dGuilds Help Page §f[§c1§f/§f§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds about §l§b»§r §aShows Any Information You Need To Know!\n§l§c»§r §e/guilds accept §l§b»§r §aAccept A Guilds Request!\n§l§c»§r §e/guilds create <name> §l§b»§r §aCreate Your Desire Guilds! §dYou Need §a$create Coins §dTo Make A Guilds!\n§l§c»§r §e/guilds del §l§b»§r §aDelete Your Own Guilds!\n§l§c»§r §e/guilds demote <player> §l§b»§r §aDemote Your Any Assistance To Members!\n§l§c»§r §e/guilds deny §l§b»§r §aDeny A Guilds Request!");
 /*§l§c»§r §e/guilds overclaim [Takeover the plot of the requested faction]\n§l§c»§r §e/guilds claim\n*/                            return true;
                         }
                         if ($args[1] == 2) {
-                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c2ff§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds help <page> §l§b»§r §aShows A List Of Guilds Help Page!\n§l§c»§r §e/guilds info §l§b»§r §aShows Your Guilds Information!\n§l§c»§r §e/guilds info <faction> §l§b»§r §aShows Targets Guilds Information!\n§l§c»§r §e/guilds invite <player> §l§b»§r §aInvite A Player As A Leader!\n§l§c»§r §e/guilds kick <player> §l§b»§r §aKick/Remove Specific Player From Guilds!\n§l§c»§r §e/guilds leader <player> §l§b»§r §aMake A Player To Be The New LEeader!\n§l§c»§r §e/guilds leave §l§b»§r §aLeave Your Current Guilds!");
+                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c2§f/§f§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds help <page> §l§b»§r §aShows A List Of Guilds Help Page!\n§l§c»§r §e/guilds info §l§b»§r §aShows Your Guilds Information!\n§l§c»§r §e/guilds info <faction> §l§b»§r §aShows Targets Guilds Information!\n§l§c»§r §e/guilds invite <player> §l§b»§r §aInvite A Player As A Leader!\n§l§c»§r §e/guilds kick <player> §l§b»§r §aKick/Remove Specific Player From Guilds!\n§l§c»§r §e/guilds leader <player> §l§b»§r §aMake A Player To Be The New LEeader!\n§l§c»§r §e/guilds leave §l§b»§r §aLeave Your Current Guilds!");
                             return true;
                         }
                         if ($args[1] == 3) {
-                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c3ff§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds members - {Members + Statuses} §l§b»§r §aShows Your Guilds MembersList!\n§l§c»§r §e/guilds assistants - {Assistants + Statuses} §l§b»§r §aShows Your AssistantsList!\n§l§c»§r §e/guilds ourleaders - {Leader + Status} §l§b»§r §aShows Your LeadersList!\n§l§c»§r §e/guilds allies §l§b»§r §aShows The Guild YOU ALLIED!");
+                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c3§f/§f§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds members - {Members + Statuses} §l§b»§r §aShows Your Guilds MembersList!\n§l§c»§r §e/guilds assistants - {Assistants + Statuses} §l§b»§r §aShows Your AssistantsList!\n§l§c»§r §e/guilds ourleaders - {Leader + Status} §l§b»§r §aShows Your LeadersList!\n§l§c»§r §e/guilds allies §l§b»§r §aShows The Guild YOU ALLIED!");
                             return true;
                         }
                         if ($args[1] == 4) {
-                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c4ff§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds desc §l§b»§r §aUpdate The Guilds Description!\n§l§c»§r §e/guilds promote <player> §l§b»§r §aPromote A Members To Assistants!\n§l§c»§r §e/guilds allywith <guilds> §l§b»§r §aRequest An Alliance With A Guilds!\n§l§c»§r §e/guilds breakalliancewith <guilds> §l§b»§r §aBreak The Alliance Contract With A Guilds!\n§l§c»§r §e/guilds allyok §l§b»§r §aAccept An Alliance Request!\n§l§c»§r §e/guilds allyno §l§b»§r §aDenied An Alliance Request!\n§l§c»§r §e/guilds allies <guilds> §l§b»§r §aShows A Specific Guilds Alliance!");
+                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c4§f/§f§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds desc §l§b»§r §aUpdate The Guilds Description!\n§l§c»§r §e/guilds promote <player> §l§b»§r §aPromote A Members To Assistants!\n§l§c»§r §e/guilds allywith <guilds> §l§b»§r §aRequest An Alliance With A Guilds! §dYou Need §$allyr Coins §dTo Alliance With A Guilds!\n§l§c»§r §e/guilds breakalliancewith <guilds> §l§b»§r §aBreak The Alliance Contract With A Guilds!\n§l§c»§r §e/guilds allyok §l§b»§r §aAccept An Alliance Request!\n§l§c»§r §e/guilds allyno §l§b»§r §aDenied An Alliance Request!\n§l§c»§r §e/guilds allies <guilds> §l§b»§r §aShows A Specific Guilds Alliance!");
                             return true;
                         }
                         if ($args[1] == 5) {
-                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c5ff§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds membersof <guilds> §l§b»§r §aShows The List Of A Specific Guilds Members!\n§l§c»§r §e/guilds assistantsof <guilds> §l§b»§r §aShows The List Of A Specific Guilds Assistants!\n§l§c»§r §e/guilds leadersof <guilds> §l§b»§r §aShows The Guilds Leaders List!\n§l§c»§r §e/guilds search <player> §l§b»§r §aSearch The Player Guilds!\n§l§c»§r §e/guilds leaderboards §l§b»§r §aShows Top Ranking Guilds!\n§l§c»§r §e/guilds setef §l§b»§r §aSet Effects For Guilds!\n§l§c»§r §e/guilds efinfo §l§b»§r §aShows Effects Information!\n§l§c»§r §e/guilds getef §l§b»§r §aGets The Effects You Have Setted!");
+                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c5§f/§f§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds membersof <guilds> §l§b»§r §aShows The List Of A Specific Guilds Members!\n§l§c»§r §e/guilds assistantsof <guilds> §l§b»§r §aShows The List Of A Specific Guilds Assistants!\n§l§c»§r §e/guilds leadersof <guilds> §l§b»§r §aShows The Guilds Leaders List!\n§l§c»§r §e/guilds search <player> §l§b»§r §aSearch The Player Guilds!\n§l§c»§r §e/guilds leaderboards §l§b»§r §aShows Top Ranking Guilds!\n§l§c»§r §e/guilds setef §l§b»§r §aSet Effects For Guilds!\n§l§c»§r §e/guilds efinfo §l§b»§r §aShows Effects Information!\n§l§c»§r §e/guilds getef §l§b»§r §aGets The Effects You Have Setted!");
                             return true;
 
                         }
@@ -777,7 +791,7 @@ class FactionCommands {
                         $this->plugin->updateAllies($args[1]);
 
                         if (!($leader instanceof Player)) {
-                            $sender->sendMessage($this->plugin->formatMessage("The leader of the requested guilds is o§f[§c3§§f[§c4§§f[§c5ff§c6§f]§c6§f]§c6§f]line"));
+                            $sender->sendMessage($this->plugin->formatMessage("The leader of the requested guilds is offline"));
                             return true;
                         }
                         if ($this->plugin->getAlliesCount($args[1]) >= $this->plugin->getAlliesLimit()) {
@@ -787,7 +801,7 @@ class FactionCommands {
                         if ($this->plugin->getAlliesCount($fac) >= $this->plugin->getAlliesLimit()) {
                             $sender->sendMessage($this->plugin->formatMessage("Your guilds has the maximum amount of allies", false));
                             return true;
-                        }
+                        }elseif($r = EconomyAPI::getInstance()->reduceMoney($player, $allyr)){
                         $stmt = $this->plugin->db->prepare("INSERT OR REPLACE INTO alliance (player, faction, requestedby, timestamp) VALUES (:player, :faction, :requestedby, :timestamp);");
                         $stmt->bindValue(":player", $leader->getName());
                         $stmt->bindValue(":faction", $args[1]);
@@ -796,6 +810,19 @@ class FactionCommands {
                         $result = $stmt->execute();
                         $sender->sendMessage($this->plugin->formatMessage("You requested to ally with $args[1]!\nWait for the leader's response...", true));
                         $leader->sendMessage($this->plugin->formatMessage("The leader of $fac requested an alliance.\nType /guilds allyok to accept or /guilds allyno to deny.", true));
+                    }else{
+		        switch($r){
+			case EconomyAPI::RET_INVALID:
+			$sender->sendMessage($this->plugin->formatMessage("§3You do not have enough coins to send a Ally Request! You Need §6$$allyr"));
+			break;
+			case EconomyAPI::RET_CANCELLED:
+			$sender->sendMessage($this->plugin->formatMessage("ERROR!"));
+			break;
+			case EconomyAPI::RET_NO_ACCOUNT:
+			$sender->sendMessage($this->plugin->formatMessage("ERROR!"));
+			break;
+						}
+					}
                     }
                     if (strtolower($args[0] == "breakalliancewith")) {
                         if (!isset($args[1])) {
