@@ -161,7 +161,8 @@ class FactionCommands {
                             $this->plugin->updateTag($sender->getName());
                             $sender->sendMessage($this->plugin->formatMessage("Guilds created", true));
                             return true;
-                        }else{switch($r){
+                        }else{
+                        switch($r){
 			case EconomyAPI::RET_INVALID:
 			$sender->sendMessage($this->plugin->formatMessage("§bYou do not have enough coins to create a Guilds! Need §6$$create."));
 			break;
