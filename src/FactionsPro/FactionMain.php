@@ -49,19 +49,16 @@ class FactionMain extends PluginBase implements Listener {
             "MaxFactionNameLength" => 15,
             "MaxPlayersPerFaction" => 30,
             "OnlyLeadersAndOfficersCanInvite" => true,
-            "OfficersCanClaim" => false,
-            "PlotSize" => 25,
-            "PlayersNeededInFactionToClaimAPlot" => 5,
-            "PowerNeededToClaimAPlot" => 1000,
             "PowerNeededToSetOrUpdateAHome" => 250,
             "PowerGainedPerPlayerInFaction" => 50,
             "PowerGainedPerKillingAnEnemy" => 10,
-"PowerReducedPerDeathByAnEnemy" => 10,
+            "PowerReducedPerDeathByAnEnemy" => 10,
             "PowerGainedPerAlly" => 100,
             "AllyLimitPerFaction" => 5,
             "TheDefaultPowerEveryFactionStartsWith" => 0,
-            "EnableOverClaim" => true,
-            "ClaimWorlds" => []
+	    "CreateCost" => 3000,
+	    "AllyCost" => 5000,
+	    "AllyPrice" => 5000,
         ));
         $this->db = new \SQLite3($this->getDataFolder() . "FactionsPro.db");
         $this->db->exec("CREATE TABLE IF NOT EXISTS master (player TEXT PRIMARY KEY COLLATE NOCASE, faction TEXT, rank TEXT);");
