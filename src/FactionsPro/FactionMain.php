@@ -18,6 +18,7 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\block\Snow;
 use pocketmine\math\Vector3;
 use pocketmine\level\Position;
+use onebone\economyapi\EconomyAPI;
 
 class FactionMain extends PluginBase implements Listener {
 
