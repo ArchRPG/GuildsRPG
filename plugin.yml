@@ -1,6 +1,6 @@
 name: FactionsPro
 author: [Tethered_ & NeuroBinds Project]
-description: A Plugin For Easily Managing Factions
+description: A Plugin For Easily Managing Guilds
 version: 0.1#Beta
 main: FactionsPro\FactionMain
 api:
