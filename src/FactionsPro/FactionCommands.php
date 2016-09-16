@@ -134,10 +134,6 @@ class FactionCommands {
                             $sender->sendMessage($this->plugin->formatMessage("Usage: /guilds create <guilds name>"));
                             return true;
                         }
-                        if (!(ctype_alnum($args[1]))) {
-                            $sender->sendMessage($this->plugin->formatMessage("You may only use letters and numbers"));
-                            return true;
-                        }
                         if ($this->plugin->isNameBanned($args[1])) {
                             $sender->sendMessage($this->plugin->formatMessage("This name is not allowed"));
                             return true;
