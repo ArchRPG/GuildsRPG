@@ -33,5 +33,12 @@ I hope this plugin can help and add a new implement to your server.
 - [x] WorldClaim (so your hub people can't claim)
 - [x] Test Update: GuildsMoney
 - [x] Clean Up
+- [x] Add GuildsMoney At Info
+- [x] Fix Bugs
+- [x] Add OP Command /g addmoney <guilds> <money>
+- [x] Add /g say <message>
+
+# Todo List
+- [ ] Add More Features On GuildsMoney
 
 
