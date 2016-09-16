@@ -12,7 +12,7 @@ A simple plugin called Guilds based on FactionsPro also add new feature for Pock
 - [x] EconomysAPI Support (create,claim,ally,sethome)
 - [x] Allies System
 - [x] Wars System
-- [x] Leaderboards (as /g leaderboard)
+- [x] Leaderboards (as /g leaderboards)
 - [x] Plots
 - [x] Admin Commands (which is /g help 6[only op player])
 
