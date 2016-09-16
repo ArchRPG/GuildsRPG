@@ -456,11 +456,11 @@ class FactionCommands {
                             return true;
                         }
                         if ($args[1] == 2) {
-                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c2§f/§f§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds help <page> §l§b»§r §aShows A List Of Guilds Help Page!\n§l§c»§r §e/guilds info §l§b»§r §aShows Your Guilds Information!\n§l§c»§r §e/guilds info <faction> §l§b»§r §aShows Targets Guilds Information!\n§l§c»§r §e/guilds invite <player> §l§b»§r §aInvite A Player As A Leader!\n§l§c»§r §e/guilds kick <player> §l§b»§r §aKick/Remove Specific Player From Guilds!\n§l§c»§r §e/guilds leader <player> §l§b»§r §aMake A Player To Be The New LEeader!\n§l§c»§r §e/guilds leave §l§b»§r §aLeave Your Current Guilds!");
+                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c2§f/§f§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds help <page> §l§b»§r §aShows A List Of Guilds Help Page!\n§l§c»§r §e/guilds info §l§b»§r §aShows Your Guilds Information!\n§l§c»§r §e/guilds info <faction> §l§b»§r §aShows Targets Guilds Information!\n§l§c»§r §e/guilds invite <player> §l§b»§r §aInvite A Player As A Leader!\n§l§c»§r §e/guilds kick <player> §l§b»§r §aKick/Remove Specific Player From Guilds!\n§l§c»§r §e/guilds leader <player> §l§b»§r §aMake A Player To Be The New Leader!\n§l§c»§r §e/guilds leave §l§b»§r §aLeave Your Current Guilds!");
                             return true;
                         }
                         if ($args[1] == 3) {
-                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c3§f/§f§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds members - {Members + Statuses} §l§b»§r §aShows Your Guilds MembersList!\n§l§c»§r §e/guilds assistants - {Assistants + Statuses} §l§b»§r §aShows Your AssistantsList!\n§l§c»§r §e/guilds ourleaders - {Leader + Status} §l§b»§r §aShows Your LeadersList!\n§l§c»§r §e/guilds allies §l§b»§r §aShows The Guild YOU ALLIED!\n§l§c»§r §e/guilds claim\n§l§c»§r §e/guilds unclaim\n§l§c»§r §e/guilds pos\n§l§c»§r §e/guilds overclaim");
+                            $sender->sendMessage(TextFormat::GOLD . "§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«\n§l§b»§r     §dGuilds Help Page §f[§c3§f/§f§c6§f]       §l§b«\n§l§b»§r§a-=-=-=-=-=-=-=-=-=-=-=-=-=-§l§b«" . TextFormat::RED . "\n§l§c»§r §e/guilds members - {Members + Statuses} §l§b»§r §aShows Your Guilds MembersList!\n§l§c»§r §e/guilds assistants - {Assistants + Statuses} §l§b»§r §aShows Your AssistantsList!\n§l§c»§r §e/guilds ourleaders - {Leader + Status} §l§b»§r §aShows Your LeadersList!\n§l§c»§r §e/guilds allies §l§b»§r §aShows The Guild YOU ALLIED!\n§l§c»§r §e/guilds claim\n§l§c»§r §e/guilds unclaim\n§l§c»§r §e/guilds pos\n§l§c»§r §e/guilds overclaim\n/guilds say <message>");
                             return true;
                         }
                         if ($args[1] == 4) {
@@ -474,7 +474,7 @@ class FactionCommands {
                         }
                         if ($args[1] == 6){
                             $sender->isOP();
-                            $sender->sendMessage(Textformat::GOLD. "Special OP Commands\n/guilds forcedelete <guilds>\n/guilds addgp\n/guilds forceunclaim <guilds>");
+                            $sender->sendMessage(Textformat::GOLD. "Special OP Commands\n/guilds forcedelete <guilds>\n/guilds addgp\n/guilds forceunclaim <guilds>\n/guilds addmoney");
                             return true;
                         }else{
                             $sender->sendMessage("ERR :P");
@@ -814,6 +814,22 @@ class FactionCommands {
                         $this->plugin->addFactionPower($args[1], $args[2]);
                         $sender->sendMessage($this->plugin->formatMessage("Successfully added $args[2] GuildsPoints to $args[1]", true));
                     }
+                    if (strtolower($args[0]) == 'addmoney') {
+                        if (!isset($args[1]) or ! isset($args[2])) {
+                            $sender->sendMessage($this->plugin->formatMessage("Usage: /guilds addmoney <guilds> <GuildsMoneys>"));
+                            return true;
+                        }
+                        if (!$this->plugin->factionExists($args[1])) {
+                            $sender->sendMessage($this->plugin->formatMessage("The requested guilds doesn't exist."));
+                            return true;
+                        }
+                        if (!($sender->isOp())) {
+                            $sender->sendMessage($this->plugin->formatMessage("You must be OP to do this."));
+                            return true;
+                        }
+                        $this->plugin->addFactionMoney($args[1], $args[2]);
+                        $sender->sendMessage($this->plugin->formatMessage("Successfully added $args[2] GuildsMoneys to $args[1]", true));
+                    }
                     //Stalk A player
                     if (strtolower($args[0]) == 'search') {
                         if (!isset($args[1])) {
@@ -997,10 +1013,6 @@ class FactionCommands {
                         $this->plugin->getPlayersInFactionByRank($sender, $args[1], "Leader");
                     }
                     if (strtolower($args[0] == "say")) {
-                        if (true) {
-                            $sender->sendMessage($this->plugin->formatMessage("/guilds say is disabled"));
-                            return true;
-                        }
                         if (!($this->plugin->isInFaction($player))) {
 
                             $sender->sendMessage($this->plugin->formatMessage("You must be in a guilds to send faction messages"));
@@ -1008,15 +1020,15 @@ class FactionCommands {
                         }
                         $r = count($args);
                         $row = array();
-                        $rank = "";
+                        $rank = "Member";
                         $f = $this->plugin->getPlayerFaction($player);
 
                         if ($this->plugin->isOfficer($player)) {
-                            $rank = "*";
+                            $rank = "Assistant";
                         } else if ($this->plugin->isLeader($player)) {
-                            $rank = "**";
+                            $rank = "Leader";
                         }
-                        $message = "-> ";
+                        $message = " ";
                         for ($i = 0; $i < $r - 1; $i = $i + 1) {
                             $message = $message . $args[$i + 1] . " ";
                         }
@@ -1025,28 +1037,11 @@ class FactionCommands {
                             $row[$i]['player'] = $resultArr['player'];
                             $p = $this->plugin->getServer()->getPlayerExact($row[$i]['player']);
                             if ($p instanceof Player) {
-                                $p->sendMessage(TextFormat::ITALIC . TextFormat::RED . "<FM>" . TextFormat::AQUA . " <$rank$f> " . TextFormat::GREEN . "<$player> " . ": " . TextFormat::RESET);
-                                $p->sendMessage(TextFormat::ITALIC . TextFormat::DARK_AQUA . $message . TextFormat::RESET);
+                                $p->sendMessage(TextFormat::ITALIC . TextFormat::RED . "" . TextFormat::AQUA . " <$rank> " . TextFormat::GREEN . "<$player> " . "-> " .TextFormat::ITALIC . TextFormat::DARK_AQUA . $message .  TextFormat::RESET);
+  
                             }
                         }
                     }
-					/////////////////////////////// MSG ///////////////////////////////
-					
-					if(strtolower($args[0]) == "msg") {
-						if($this->plugin->isInFaction($sender->getName()) == false) {
-							$sender->sendMessage($this->plugin->formatMessage("§cYou must be in a guilds to use this"));
-							return true;
-						}
-						if($this->plugin->isLeader($player) == false) {
-							$sender->sendMessage($this->plugin->formatMessage("§cYou must be leader to use this"));
-							return true;
-						}
-						$sender->sendMessage($this->plugin->formatMessage("§bType your desired message in chat", true));
-						$stmt = $this->plugin->db->prepare("INSERT OR REPLACE INTO motdrcv (player, timestamp) VALUES (:player, :timestamp);");
-						$stmt->bindValue(":player", strtolower($sender->getName()));
-						$stmt->bindValue(":timestamp", time());
-						$result = $stmt->execute();
-					}
 
 
                     ////////////////////////////// ALLY SYSTEM ////////////////////////////////
