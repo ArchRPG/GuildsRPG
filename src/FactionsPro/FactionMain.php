@@ -72,6 +72,9 @@ class FactionMain extends PluginBase implements Listener {
 	    	"AllyCost" => 5000,
 	    	"AllyPrice" => 5000,
 	    	"SetHomeCost" => 150,
+          "###GuildsMoneys###",
+          "GuildsMoneyGainPerKill" => 10,
+          "GuildsMoneyLostPerDeath" => 10,
         ));
         $this->db = new \SQLite3($this->getDataFolder() . "GuildsDatabase.db");
         $this->db->exec("CREATE TABLE IF NOT EXISTS master (player TEXT PRIMARY KEY COLLATE NOCASE, faction TEXT, rank TEXT);");
@@ -439,18 +442,18 @@ class FactionMain extends PluginBase implements Listener {
     }
 ///TEST::FACTIONMONEY///
     public function getFactionMoney($faction) {
-        $result = $this->db->query("SELECT * FROM money WHERE faction = '$faction';");
+        $result = $this->db->query("SELECT * FROM moneys WHERE faction = '$faction';");
         $resultArr = $result->fetchArray(SQLITE3_ASSOC);
-        return (int) $resultArr["money"];
+        return (int) $resultArr["moneys"];
     }
 
     public function addFactionMoney($faction, $money) {
         if ($this->getFactionMoney($faction) + $money < 0) {
             $money = $this->getFactionMoney($faction);
         }
-        $stmt = $this->db->prepare("INSERT OR REPLACE INTO money (faction, money) VALUES (:faction, :money);");
+        $stmt = $this->db->prepare("INSERT OR REPLACE INTO money (faction, moneys) VALUES (:faction, :moneys);");
         $stmt->bindValue(":faction", $faction);
-        $stmt->bindValue(":money", $this->getFactionMoney($faction) + $money);
+        $stmt->bindValue(":moneys", $this->getFactionMoney($faction) + $money);
         $result = $stmt->execute();
     }
 
@@ -458,9 +461,9 @@ class FactionMain extends PluginBase implements Listener {
         if ($this->getFactionMoney($faction) - $money < 0) {
             $money = $this->getFactionMoney($faction);
         }
-        $stmt = $this->db->prepare("INSERT OR REPLACE INTO money (faction, money) VALUES (:faction, :money);");
+        $stmt = $this->db->prepare("INSERT OR REPLACE INTO money (faction, moneys) VALUES (:faction, :moneys);");
         $stmt->bindValue(":faction", $faction);
-        $stmt->bindValue(":money", $this->getFactionMoney($faction) - $money);
+        $stmt->bindValue(":moneys", $this->getFactionMoney($faction) - $money);
         $result = $stmt->execute();
     }
 
