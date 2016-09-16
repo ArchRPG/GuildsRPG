@@ -132,12 +132,16 @@ class FactionListener implements Listener {
                 if($this->plugin->isInFaction($p)){
                     $f = $this->plugin->getPlayerFaction($p);
                     $e = $this->plugin->prefs->get("PowerGainedPerKillingAnEnemy");
-  $killer->sendPopup("§6+".$e);
+                    $d = $this->plugin->prefs->get("GuildsMoneyGainPerKill");
+  $killer->sendPopup("§6+ ".$e." GuildsPoint");
+  $killer->sendTip("§6+ ".$d." GuildsMoney");
                     if($ent instanceof Player){
                         if($this->plugin->isInFaction($ent->getPlayer()->getName())){
                            $this->plugin->addFactionPower($f,$e);
+                           $this->plugin->addFactionMoney($f,$d);
                         } else {
                            $this->plugin->addFactionPower($f,$e/2);
+                           $this->plugin->addFactionMoney($f,$d/2);
                         }
                     }
                 }
@@ -148,12 +152,16 @@ class FactionListener implements Listener {
             if($this->plugin->isInFaction($e)){
                 $f = $this->plugin->getPlayerFaction($e);
                 $e = $this->plugin->prefs->get("PowerReducedPerDeathByAnEnemy");
-     $e->sendPopup("§c-".$e)
+                $m = $this->plugin->prefs->get("GuildsMoneyLostPerDeath");
+     $ent->sendPopup("§c- ".$e." GuildsPoint");
+     $ent->sendTip("§c- ".$m." GuildsMoney");
                 if($ent->getLastDamageCause() instanceof EntityDamageByEntityEvent && $ent->getLastDamageCause()->getDamager() instanceof Player){
                     if($this->plugin->isInFaction($ent->getLastDamageCause()->getDamager()->getPlayer()->getName())){      
                         $this->plugin->subtractFactionPower($f,$e*2);
+                        $this->plugin->subtractFactionMoney($f,$m*2);
                     } else {
                         $this->plugin->subtractFactionPower($f,$e);
+                        $this->plugin->subtractFactionMoney($f,$m);
                     }
                 }
             }
