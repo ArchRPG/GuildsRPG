@@ -451,7 +451,7 @@ class FactionMain extends PluginBase implements Listener {
         if ($this->getFactionMoney($faction) + $money < 0) {
             $money = $this->getFactionMoney($faction);
         }
-        $stmt = $this->db->prepare("INSERT OR REPLACE INTO money (faction, moneys) VALUES (:faction, :moneys);");
+        $stmt = $this->db->prepare("INSERT OR REPLACE INTO moneys (faction, moneys) VALUES (:faction, :moneys);");
         $stmt->bindValue(":faction", $faction);
         $stmt->bindValue(":moneys", $this->getFactionMoney($faction) + $money);
         $result = $stmt->execute();
@@ -461,7 +461,7 @@ class FactionMain extends PluginBase implements Listener {
         if ($this->getFactionMoney($faction) - $money < 0) {
             $money = $this->getFactionMoney($faction);
         }
-        $stmt = $this->db->prepare("INSERT OR REPLACE INTO money (faction, moneys) VALUES (:faction, :moneys);");
+        $stmt = $this->db->prepare("INSERT OR REPLACE INTO moneys (faction, moneys) VALUES (:faction, :moneys);");
         $stmt->bindValue(":faction", $faction);
         $stmt->bindValue(":moneys", $this->getFactionMoney($faction) - $money);
         $result = $stmt->execute();
