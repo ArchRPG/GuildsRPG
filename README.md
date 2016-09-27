@@ -1,5 +1,5 @@
-# Simple-Guilds-Management
-A simple plugin called Guilds based on FactionsPro also add new feature for Pocketmine, Genisys, ClearSky, And Others Fork!
+# GuildsRPG
+A simple(not so) plugin called Guilds based on FactionsPro also add new feature for your server.
 
 # Info:
 - Actually This Plugin Were Taken From FactionsPro because others user can use it fine with PureChat plugin.
@@ -40,5 +40,6 @@ I hope this plugin can help and add a new implement to your server.
 
 # Todo List
 - [ ] Add More Features On GuildsMoney
+- [ ] Guilds Booster
 
 
