@@ -6,6 +6,7 @@ A simple(not so) plugin called Guilds based on FactionsPro also add new feature 
 - You Need EconomyAPI, If Not This Plugin Will Not Work..
 - I Recommend You Check Put The FactionCommand.php Cause There Might A Commands I Forgot To Add In Help List.
 - Please Report Any Kind Of Bugs At The Issues.
+- [To Any Developer Or Server Owner Or Plugin Tester I likely To Recomend On This New Year Update 2017 You Can See It By Clicking At This.](https://github.com/ArchRPG/GuildsRPG/tree/NewYear2017)
 
 # Features:
 
